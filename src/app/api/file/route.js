@@ -1,47 +1,27 @@
 import { NextResponse } from "next/server";
 import { writeFile, readFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import imageType from "image-type";
+
+import formValidation from "./validation";
+import { Post } from "@/mongo/models/Post";
 
 export async function POST(req) {
-  const MAX_IMG_SIZE_BYTES = 5000000;
-  const FILETYPE_REGEX = /^image\/(jpeg|png|webp|gif)$/;
-  const POINTER_FILE = './images/pointer.bin';
+  const formData = await req.formData();
 
-  const img = (await req.formData()).get("image");
-  if (img === null) {
-    return NextResponse.json(
-      { msg: "The formData is missing an image field" },
-      { status: 400 }
-    );
+  try {
+    await savePost(await formValidation(formData));
+  } catch ({ msg, status }) {
+    return NextResponse.json({ msg }, { status });
   }
 
-  if (img.size > MAX_IMG_SIZE_BYTES) {
-    return NextResponse.json(
-      {
-        msg: `The file is too large, it should be less or equal to ${
-          MAX_IMG_SIZE_BYTES / 1000000
-        } MB`,
-      },
-      { status: 413 }
-    );
-  }
+  return NextResponse.json(
+    { msg: "The image was uploaded successfully" },
+    { status: 200 }
+  );
+}
 
-  const imgBytes = await img.arrayBuffer();
-  const imgBuffer = Buffer.from(imgBytes);
-  const imgType = await imageType(imgBuffer);
-
-  if (imgType === undefined || !FILETYPE_REGEX.test(imgType.mime)) {
-    return NextResponse.json(
-      {
-        msg: "The uploaded file's type is not supported, \
-          please send a file belonging to one of the \
-          following MIME types: image/jpeg, image/png, \
-          image/gif or image/webp",
-      },
-      { status: 415 }
-    );
-  }
+async function savePost(post) {
+  const POINTER_FILE = "./images/pointer.bin";
 
   try {
     const pointer = String(
@@ -57,24 +37,23 @@ export async function POST(req) {
       await mkdir(path, { recursive: true });
     }
 
-    await writeFile(path + "/" + pointer + "." + imgType.ext, imgBuffer);
+    await writeFile(
+      path + "/" + pointer + "." + post.img.type.ext,
+      post.img.buf
+    );
+
+    await new Post({
+      author: post.author,
+      title: post.title,
+      img: pointer,
+      content: post.content,
+    }).save();
 
     const pointerBuffer = Buffer.alloc(4);
     pointerBuffer.writeUInt32BE(parseInt(pointer));
-    await writeFile(
-      POINTER_FILE,
-      pointerBuffer
-    );
+    await writeFile(POINTER_FILE, pointerBuffer);
   } catch ({ message }) {
     console.error(message);
-    return NextResponse.json(
-      { msg: "An error occured while saving the image" },
-      { status: 500 }
-    );
+    throw { msg: "An error occured while saving the post", status: 500 };
   }
-
-  return NextResponse.json(
-    { msg: "The image was uploaded successfully" },
-    { status: 200 }
-  );
 }
