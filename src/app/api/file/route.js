@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req) {
   const MAX_IMG_SIZE_BYTES = 5000000;
+  const FILETYPE_REGEX = /^image\/(jpeg|png|webp|gif)$/
 
   const formData = await req.formData();
   const img = formData.get("image");
@@ -11,7 +12,7 @@ export async function POST(req) {
 
   if (
     img !== null &&
-    new RegExp("^image/.*$").test(img.type) &&
+    FILETYPE_REGEX.test(img.type) &&
     img.size <= MAX_IMG_SIZE_BYTES
   ) {
     const bytes = await img.arrayBuffer();

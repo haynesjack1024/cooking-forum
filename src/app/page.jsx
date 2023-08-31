@@ -4,6 +4,7 @@ import { useTransition, useState } from "react";
 
 export default function App() {
   const MAX_IMG_SIZE_BYTES = 5000000;
+  const FILETYPE_REGEX = /^image\/(jpeg|png|webp|gif)$/
   const [status, setStatus] = useState();
   const [, startTransition] = useTransition();
   const {
@@ -32,7 +33,7 @@ export default function App() {
           required: "You haven't picked an image",
           validate: {
             type: (v) =>
-              new RegExp("^image/.*$").test(v[0].type) ||
+              FILETYPE_REGEX.test(v[0].type) ||
               "The picked file is not an image",
             size: (v) =>
               v[0].size <= MAX_IMG_SIZE_BYTES ||
