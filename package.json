@@ -18,5 +18,8 @@
     "react-hook-form": "^7.45.4",
     "sass": "^1.65.1",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "lorem-ipsum": "^2.0.8"
   }
 }
