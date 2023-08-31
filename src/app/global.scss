@@ -1,0 +1,33 @@
+@use "colors" as *;
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: $col2;
+  color: $black;
+}
+
+header {
+  padding: 0.6em 0;
+  text-align: center;
+  background-color: $col1;
+  border-bottom: 4px solid $black;
+
+  h1 {
+    margin: 0;
+    font-size: 1.5em;
+  }
+}
+
+#box {
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  padding: 2em 0;
+}
+
+main {
+  grid-column: 2 / span 1;
+  background-color: $white;
+  border-radius: 6px;
+  box-shadow: 5px 5px 1px #00000033;
+}
