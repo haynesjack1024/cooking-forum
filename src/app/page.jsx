@@ -34,7 +34,7 @@ export default function App() {
           validate: {
             type: (v) =>
               FILETYPE_REGEX.test(v[0].type) ||
-              "The picked file is not an image",
+              "The picked file type is not a supported, choose gif, jpeg, png or webp",
             size: (v) =>
               v[0].size <= MAX_IMG_SIZE_BYTES ||
               `Image's size should be less or equal to ${
