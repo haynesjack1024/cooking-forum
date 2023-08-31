@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { writeFile } from "node:fs/promises";
+import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req) {
   const MAX_IMG_SIZE_BYTES = 5000000;
@@ -7,7 +8,7 @@ export async function POST(req) {
   const formData = await req.formData();
   const img = formData.get("image");
   let status = 200;
-  
+
   if (
     img !== null &&
     new RegExp("^image/.*$").test(img.type) &&
@@ -18,7 +19,7 @@ export async function POST(req) {
 
     try {
       await writeFile(
-        `${process.cwd()}${process.env.IMAGES_DIR}/${img.name}`,
+        `${process.cwd()}${process.env.IMAGES_DIR}/${uuidv4()}`,
         buffer
       );
     } catch ({ message }) {
