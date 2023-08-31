@@ -4,7 +4,7 @@ import { useTransition, useState } from "react";
 
 export default function App() {
   const MAX_IMG_SIZE_BYTES = 5000000;
-  const FILETYPE_REGEX = /^image\/(jpeg|png|webp|gif)$/
+  const FILETYPE_REGEX = /^image\/(jpeg|png|webp|gif)$/;
   const [status, setStatus] = useState();
   const [, startTransition] = useTransition();
   const {
