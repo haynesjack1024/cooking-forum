@@ -1,13 +1,5 @@
 import mongoose from "../db";
+import { postSchema } from "../schemas/post/postSchema";
 
 export const Post =
-  mongoose.models?.Post ||
-  new mongoose.model(
-    "Post",
-    new mongoose.Schema({
-      author: String,
-      title: String,
-      img: String,
-      content: String,
-    })
-  );
+  mongoose.models?.Post || new mongoose.model("Post", postSchema);
