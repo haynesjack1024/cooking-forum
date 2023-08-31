@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { writeFile } from "node:fs/promises";
-import { v4 as uuidv4 } from "uuid";
+import { writeFile, readFile, mkdir } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import imageType from "image-type";
 
 export async function POST(req) {
   const MAX_IMG_SIZE_BYTES = 5000000;
   const FILETYPE_REGEX = /^image\/(jpeg|png|webp|gif)$/;
+  const POINTER_FILE = './images/pointer.bin';
 
   const img = (await req.formData()).get("image");
   if (img === null) {
@@ -26,11 +27,11 @@ export async function POST(req) {
     );
   }
 
-  const bytes = await img.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-  const type = await imageType(buffer);
+  const imgBytes = await img.arrayBuffer();
+  const imgBuffer = Buffer.from(imgBytes);
+  const imgType = await imageType(imgBuffer);
 
-  if (type === undefined || !FILETYPE_REGEX.test(type.mime)) {
+  if (imgType === undefined || !FILETYPE_REGEX.test(imgType.mime)) {
     return NextResponse.json(
       {
         msg: "The uploaded file's type is not supported, \
@@ -43,9 +44,26 @@ export async function POST(req) {
   }
 
   try {
+    const pointer = String(
+      (await readFile(POINTER_FILE)).readUInt32BE() + 1
+    ).padStart(12, "0");
+
+    let path = process.cwd() + process.env.IMAGES_DIR;
+    for (let i = 0; i < 3; i++) {
+      path += "/" + pointer.slice(i * 3, (i + 1) * 3);
+    }
+
+    if (!existsSync(path)) {
+      await mkdir(path, { recursive: true });
+    }
+
+    await writeFile(path + "/" + pointer + "." + imgType.ext, imgBuffer);
+
+    const pointerBuffer = Buffer.alloc(4);
+    pointerBuffer.writeUInt32BE(parseInt(pointer));
     await writeFile(
-      `${process.cwd()}${process.env.IMAGES_DIR}/${uuidv4()}.${type.ext}`,
-      buffer
+      POINTER_FILE,
+      pointerBuffer
     );
   } catch ({ message }) {
     console.error(message);
