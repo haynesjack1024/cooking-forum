@@ -1,15 +1,15 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { useTransition, useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function App() {
   const MAX_IMG_SIZE_BYTES = 5000000;
   const FILETYPE_REGEX = /^image\/(jpeg|png|webp|gif)$/;
   const [status, setStatus] = useState();
-  const [, startTransition] = useTransition();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitted, isSubmitting, isSubmitSuccessful },
   } = useForm();
 
@@ -22,8 +22,12 @@ export default function App() {
       body: formData,
     });
 
-    startTransition(() => setStatus(res.ok));
+    setStatus(res.ok);
   }
+
+  useEffect(() => {
+    reset();
+  }, [isSubmitSuccessful, reset]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -31,6 +35,7 @@ export default function App() {
         type="file"
         {...register("image", {
           required: "You haven't picked an image",
+          onChange: () => setStatus(undefined),
           validate: {
             type: (v) =>
               FILETYPE_REGEX.test(v[0].type) ||
@@ -49,15 +54,15 @@ export default function App() {
             if (status === undefined) {
               if (isSubmitting) {
                 return "sending...";
-              } else if (isSubmitSuccessful) {
-                return "waiting for response...";
-              } else if (!isSubmitSuccessful && isSubmitted) {
-                return "sending failed";
+              } else if (isSubmitted) {
+                return isSubmitSuccessful
+                  ? "waiting for response..."
+                  : "sending failed";
               }
-            } else if (status) {
-              return "file uploaded successfully!";
             } else {
-              return "file upload failed";
+              return status
+                ? "file uploaded successfully!"
+                : "file upload failed";
             }
           })()}
       </div>
