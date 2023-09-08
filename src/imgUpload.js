@@ -1,24 +1,24 @@
 import { writeFile, readFile, mkdir } from "node:fs/promises";
-import { existsSync } from "node:fs";
 import imageType from "image-type";
 
 export async function saveImg(imgData) {
   const POINTER_FILE = "./images/pointer.bin";
 
   try {
-    const pointer = String(
-      (await readFile(POINTER_FILE)).readUInt32BE() + 1
-    ).padStart(12, "0");
+    let pointerInt;
+    try {
+      pointerInt = (await readFile(POINTER_FILE)).readUInt32BE() + 1
+    } catch(e) {
+      pointerInt = 1;
+    }
+    const pointer = String(pointer).padStart(12, "0");
 
     let path = process.cwd() + process.env.IMAGES_DIR;
     for (let i = 0; i < 3; i++) {
       path += "/" + pointer.slice(i * 3, (i + 1) * 3);
     }
 
-    if (!existsSync(path)) {
-      await mkdir(path, { recursive: true });
-    }
-
+    await mkdir(path, { recursive: true });
     await writeFile(path + "/" + pointer + "." + imgData.type.ext, imgData.buf);
 
     const pointerBuffer = Buffer.alloc(4);
