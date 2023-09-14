@@ -1,0 +1,30 @@
+@use "colors" as *;
+@use "sass:color";
+
+$postTileWidth: 12em;
+
+.postTile {
+  padding: 1em;
+  background-color: color.scale($white, $saturation: 10%, $lightness: -5%);
+  border-radius: 5px;
+  box-shadow: 2px 2px 1px $shadow;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  & > #title {
+    font-size: 1.25em;
+  }
+
+  & > #author {
+    font-size: 0.8em;
+  }
+}
+
+.posts {
+  display: grid;
+  padding: 1.5em;
+  grid-template-columns: repeat(auto-fill, minmax($postTileWidth, 1fr));
+  gap: 1em;
+}
