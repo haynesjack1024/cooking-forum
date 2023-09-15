@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { imgValidation, saveImg } from "@/imgUpload.js";
+import { imgValidation, saveImg } from "../imgUpload";
 
 import { Post } from "@/mongo/models/Post";
 
