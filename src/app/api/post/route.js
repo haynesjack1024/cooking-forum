@@ -15,7 +15,7 @@ export async function POST(req) {
   try {
     await post.validate();
   } catch ({ message }) {
-    return NextResponse.json({ msg: message }, { status: 400 });
+    return new NextResponse(message, { status: 400 });
   }
 
   if (formData.get("img") !== null) {
@@ -24,21 +24,18 @@ export async function POST(req) {
       const img = await saveImg(imgData);
       post.img = img;
     } catch ({ msg, status }) {
-      return NextResponse.json({ msg }, { status });
+      return new NextResponse(msg, { status });
     }
   }
 
   try {
     await post.save();
-  } catch (e) {
-    return NextResponse.json({
-      msg: "Error while saving post",
-      status: 500,
-    });
+  } catch ({ message }) {
+    console.error(message);
+    return new NextResponse("Error while saving post", { status: 500 });
   }
 
-  return NextResponse.json(
-    { msg: "The post was saved successfully" },
-    { status: 200 }
-  );
+  return new NextResponse("The post was uploaded successfully", {
+    status: 201,
+  });
 }
