@@ -1,5 +1,13 @@
-import Posts from "@/components/Posts";
+"use client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import PostsList from "@/components/PostsList";
 
-export default function App() {
-  return <Posts />;
+const queryClient = new QueryClient();
+
+export default function Posts({ searchParams }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <PostsList sinceId={searchParams?.since_id} limit={searchParams?.limit} />
+    </QueryClientProvider>
+  );
 }

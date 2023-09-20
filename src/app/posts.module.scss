@@ -2,10 +2,11 @@
 @use "sass:color";
 
 $postTileWidth: 12em;
+$tileColor: color.scale($white, $saturation: 10%, $lightness: -5%);
 
 .postTile {
   padding: 1em;
-  background-color: color.scale($white, $saturation: 10%, $lightness: -5%);
+  background-color: $tileColor;
   border-radius: 5px;
   box-shadow: 2px 2px 1px $shadow;
 
@@ -22,9 +23,36 @@ $postTileWidth: 12em;
   }
 }
 
-.posts {
+#posts {
   display: grid;
-  padding: 1.5em;
+  width: 100%;
   grid-template-columns: repeat(auto-fill, minmax($postTileWidth, 1fr));
   gap: 1em;
+}
+
+#container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5em;
+  gap: 1em;
+
+  & > nav {
+    width: fit-content;
+    display: flex;
+    column-gap: 1em;
+
+    & > a {
+      border-radius: 2px;
+      padding: 0.3em;
+      background-color: $tileColor;
+      box-shadow: 2px 2px 1px $shadow;
+      color: $black;
+      text-decoration: none;
+    }
+
+    & > a.currentPage {
+      background-color: color.scale($accentColor, $lightness: 20%, $saturation: -20%);
+    }
+  }
 }
