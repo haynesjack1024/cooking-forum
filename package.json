@@ -9,20 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@tanstack/react-query": "^4.35.3",
+    "@tanstack/react-query": "^4.36.1",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.13",
     "image-type": "^5.2.0",
-    "mongoose": "^7.4.3",
+    "mongoose": "^7.6.2",
     "next": "13.4.13",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.45.4",
-    "sass": "^1.65.1",
+    "react-hook-form": "^7.47.0",
+    "sass": "^1.69.3",
     "validator": "^13.11.0"
   },
   "devDependencies": {
-    "@tanstack/eslint-plugin-query": "^4.34.1",
+    "@tanstack/eslint-plugin-query": "^4.36.1",
     "lorem-ipsum": "^2.0.8"
   }
 }
