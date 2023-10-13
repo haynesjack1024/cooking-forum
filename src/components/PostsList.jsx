@@ -15,11 +15,11 @@ export default function PostsList({ sinceId, limit }) {
   });
 
   const posts = postsQueryResult.data?.posts;
-  const currentId = posts?.at(0)._id;
+  const currentId = posts?.at(0)?._id;
   const nextId = postsQueryResult.data?.nextId;
 
   const [sinceIds, setSinceIds] = useState([]);
-  const addSinceId = (newId) => {
+  const addSinceId = (newId) => { // Only add values that were check on back-end to be a valid ObjectID
     if (newId && !sinceIds.includes(newId)) {
       setSinceIds((oldArray) => [...oldArray, newId].sort());
     }
@@ -27,12 +27,12 @@ export default function PostsList({ sinceId, limit }) {
 
   if (postsQueryResult.isSuccess) {
     addSinceId(currentId);
-    addSinceId(nextId);
   }
 
   const unrollPostsQuery = () => {
     if (postsQueryResult.isLoading) return "Loading...";
     if (postsQueryResult.isError) return postsQueryResult.error.message;
+    if (posts.length <= 0) return "No posts found";
 
     return posts.reduce(
       (acc, post, idx) => [

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { validateLimitParam, validateSinceParam } from "./validation";
 import { Post } from "@/mongo/models/Post";
+import { Types } from "mongoose";
 
 export async function GET(req) {
   const urlSearchParams = new URL(req.url).searchParams;
@@ -16,7 +17,7 @@ export async function GET(req) {
     return new NextResponse(msg, { status });
   }
 
-  const filter = sinceId ? { _id: { $gte: sinceId } } : {};
+  const filter = { _id: { $gte: sinceId ?? new Types.ObjectId(0) } };
   const queryResult = await Post.find(filter, "author title").limit(limit + 1);
   const posts = queryResult.slice(0, -1);
   const nextId = queryResult.at(limit)?._id;
