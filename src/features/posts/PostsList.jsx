@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-import styles from "@/app/posts.module.scss";
+import styles from "./posts.module.scss";
 import getPosts from "@/app/api/posts/getPosts";
 import PostTile from "./PostTile";
 import PostsNav from "./PostsNav";
@@ -27,11 +27,12 @@ export default function PostsList({ sinceId, limit }) {
 
   if (postsQueryResult.isSuccess) {
     addSinceId(currentId);
+    addSinceId(nextId);
   }
 
   const unrollPostsQuery = () => {
     if (postsQueryResult.isLoading) return "Loading...";
-    if (postsQueryResult.isError) return postsQueryResult.error.message;
+    if (postsQueryResult.isError) return "Unable to get posts";
     if (posts.length <= 0) return "No posts found";
 
     return posts.reduce(

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import styles from "../app/posts.module.scss";
+import styles from "./posts.module.scss";
 
 export default function PostsNav({ currentId, limit, sinceIds, nextId }) {
   const limitParam = limit ? "&limit=" + limit : "";

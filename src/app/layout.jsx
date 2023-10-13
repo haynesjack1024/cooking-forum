@@ -3,7 +3,7 @@ export const metadata = {
 };
 
 import "./global.scss";
-import ProfileIcon from "@/components/ProfileIcon";
+import ProfileIcon from "@/features/svgs/ProfileIcon";
 
 export default function RootLayout({ children }) {
   return (

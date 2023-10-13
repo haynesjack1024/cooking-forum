@@ -1,4 +1,4 @@
-import styles from "@/app/posts.module.scss";
+import styles from "./posts.module.scss";
 
 export default function PostTile({ title, author }) {
   return (
