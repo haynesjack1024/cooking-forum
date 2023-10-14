@@ -9,7 +9,7 @@ Note, Docker and Node.js are required to run this application
 Create a `.env.local` file with the following environmental variables:
 - `MONGO_USER`: the username used when authenticating to mongodb
 - `MONGO_PASS`: the password used when authenticating to mongodb
-- `IMAGES_DIR`: path where to store images, start with "/"
+- `IMAGES_DIR`: path where to store images, start with a "/", don't end with a "/"
 
 Run `docker compose --env-file .env.local up -d`
 

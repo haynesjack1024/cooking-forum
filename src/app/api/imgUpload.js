@@ -2,7 +2,7 @@ import { writeFile, readFile, mkdir } from "node:fs/promises";
 import imageType from "image-type";
 
 export async function saveImg(imgData) {
-  const POINTER_FILE = "./images/pointer.bin";
+  const POINTER_FILE = `.${process.env.IMAGES_DIR}/pointer.bin`;
 
   try {
     let pointerInt;
